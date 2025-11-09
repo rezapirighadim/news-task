@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Source;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -15,11 +16,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Create sources
+        $sources = [
+            ['name' => 'NewsAPI', 'slug' => 'newsapi'],
+            ['name' => 'The Guardian', 'slug' => 'the-guardian'],
+            ['name' => 'New York Times', 'slug' => 'new-york-times'],
+        ];
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        foreach ($sources as $source) {
+            Source::firstOrCreate($source);
+        }
     }
 }
