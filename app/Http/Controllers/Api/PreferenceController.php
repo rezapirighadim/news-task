@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 class PreferenceController extends Controller
 {
     public function __construct(
-        private UserPreferenceService $service
+        private readonly UserPreferenceService $service
     ) {}
 
     public function show(Request $request)

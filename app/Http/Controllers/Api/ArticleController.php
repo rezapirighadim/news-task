@@ -11,7 +11,7 @@ use Illuminate\Http\JsonResponse;
 class ArticleController extends Controller
 {
     public function __construct(
-        private UserPreferenceService $service
+        private readonly UserPreferenceService $service
     ) {}
 
     public function index(ArticleSearchRequest $request)
