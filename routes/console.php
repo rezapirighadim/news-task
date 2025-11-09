@@ -1,8 +1,17 @@
 <?php
 
-use Illuminate\Foundation\Inspiring;
-use Illuminate\Support\Facades\Artisan;
+use App\Adapters\GuardianAdapter;
+use App\Adapters\NewsApiAdapter;
+use App\Adapters\NYTimesAdapter;
+use App\Jobs\FetchArticlesJob;
+use Illuminate\Support\Facades\Schedule;
 
-Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->purpose('Display an inspiring quote');
+Schedule::call(function () {
+    FetchArticlesJob::dispatch(NewsApiAdapter::class);
+    FetchArticlesJob::dispatch(GuardianAdapter::class);
+    FetchArticlesJob::dispatch(NYTimesAdapter::class);
+})
+    ->hourly()
+    ->name('fetch-articles')
+    ->withoutOverlapping()
+    ->onOneServer(); // if there is multiple servers
