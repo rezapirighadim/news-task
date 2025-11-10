@@ -4,9 +4,8 @@ use App\Http\Controllers\Api\ArticleController;
 use App\Http\Controllers\Api\MetadataController;
 use App\Http\Controllers\Api\PreferenceController;
 
-Route::prefix('v1')->group(function () {
-
-    // Articles
+// Public routes with rate limiting
+Route::prefix('v1')->middleware('throttle:api')->group(function () {
     Route::get('/articles', [ArticleController::class, 'index']);
     Route::get('/articles/{id}', [ArticleController::class, 'show']);
 
@@ -17,12 +16,11 @@ Route::prefix('v1')->group(function () {
 
 });
 
-// Protected routes (require authentication)
-Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
-
-    // User preferences
-    Route::get('/preferences', [PreferenceController::class, 'show']);
-    Route::post('/preferences', [PreferenceController::class, 'update']);
-    Route::get('/feed', [PreferenceController::class, 'personalizedFeed']);
-
-});
+// Protected routes (stricter limits)
+Route::prefix('v1')
+    ->middleware(['auth:sanctum', 'throttle:60,1'])
+    ->group(function () {
+        Route::get('/preferences', [PreferenceController::class, 'show']);
+        Route::post('/preferences', [PreferenceController::class, 'update']);
+        Route::get('/feed', [PreferenceController::class, 'personalizedFeed']);
+    });
