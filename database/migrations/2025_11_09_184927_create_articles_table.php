@@ -27,7 +27,9 @@ return new class extends Migration
             $table->index('published_at');
             $table->index('source_id');
             $table->index(['source_id', 'published_at']);
-            $table->fullText(['title', 'description', 'content']);
+            if (DB::connection()->getDriverName() !== 'sqlite') {
+                $table->fullText(['title', 'description', 'content']);
+            }
         });
 
         Schema::create('article_category', function (Blueprint $table) {

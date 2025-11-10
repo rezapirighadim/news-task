@@ -32,6 +32,7 @@ class MetadataController extends Controller
     {
         $authors = Author::select('id', 'name')
             ->withCount('articles')
+            ->groupBy('authors.id', 'authors.name')
             ->having('articles_count', '>', 0)
             ->orderBy('name')
             ->get();
