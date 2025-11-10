@@ -1,4 +1,3 @@
-markdown
 # News Aggregator Backend
 
 A Laravel backend service that aggregates news from multiple external APIs (NewsAPI, The Guardian, NY Times).  
@@ -6,7 +5,7 @@ Includes caching, queue workers, scheduling, Swagger documentation, and clean ar
 
 ---
 
-##  Features
+## Features
 - Fetch and normalize articles from 3 external sources
 - Redis caching & queued background fetching
 - Automatic scheduled synchronization
@@ -16,7 +15,7 @@ Includes caching, queue workers, scheduling, Swagger documentation, and clean ar
 
 ---
 
-##  Setup
+## Setup
 
 ### 1. Install Dependencies
 ```bash
@@ -30,7 +29,7 @@ cp .env.example .env
 php artisan key:generate
 ```
 
-Add to `.env`:
+Add the following keys to your `.env`:
 
 ```
 NEWSAPI_KEY=your_key
@@ -48,7 +47,21 @@ php artisan migrate
 php artisan db:seed
 ```
 
-### 4. Swagger Documentation (Optional but recommended)
+### 4. Docker (Optional but recommended)
+
+Start containers:
+
+```bash
+docker compose up -d
+```
+
+Check application health:
+
+```bash
+curl http://localhost:8000/health
+```
+
+### 5. Swagger Documentation (Optional but recommended)
 
 Generate docs:
 
@@ -62,13 +75,13 @@ Swagger UI available at:
 http://localhost:8000/api/documentation
 ```
 
-### 5. Queue Worker
+### 6. Queue Worker
 
 ```bash
 php artisan queue:work
 ```
 
-### 6. Scheduler (Production)
+### 7. Scheduler (Production)
 
 Add to server crontab:
 
@@ -76,9 +89,12 @@ Add to server crontab:
 * * * * * cd /path-to-project && php artisan schedule:run >> /dev/null 2>&1
 ```
 
-##  Usage
+---
+
+## Usage
 
 ### Manual Fetch
+
 ```bash
 php artisan articles:fetch
 php artisan articles:fetch --source=newsapi
@@ -113,15 +129,23 @@ GET /api/v1/feed
 
 ---
 
-##  Testing
+## Testing
+
+Pest-based tests:
 
 ```bash
 php artisan test
 ```
 
+For better performance, you can run tests with parallel execution:
+
+```bash
+./vendor/bin/pest --parallel
+```
+
 ---
 
-##  Architecture Overview
+## Architecture Overview
 
 | Layer          | Responsibility                                              |
 | -------------- | ----------------------------------------------------------- |
@@ -153,5 +177,3 @@ Register & get keys here:
 * NewsAPI: [https://newsapi.org/](https://newsapi.org/)
 * The Guardian: [https://open-platform.theguardian.com/](https://open-platform.theguardian.com/)
 * NY Times: [https://developer.nytimes.com/](https://developer.nytimes.com/)
-
-
