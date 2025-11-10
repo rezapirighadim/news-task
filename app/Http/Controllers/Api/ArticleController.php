@@ -5,13 +5,13 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ArticleSearchRequest;
 use App\Http\Resources\ArticleResource;
-use App\Services\UserPreferenceService;
+use App\Services\ArticleService;
 use Illuminate\Http\JsonResponse;
 
 class ArticleController extends Controller
 {
     public function __construct(
-        private readonly UserPreferenceService $service
+        private readonly ArticleService $service
     ) {}
 
     public function index(ArticleSearchRequest $request)
