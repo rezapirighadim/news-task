@@ -7,6 +7,7 @@ use App\Models\Author;
 use App\Models\Category;
 use App\Models\Source;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class ArticleRepository
@@ -21,8 +22,15 @@ class ArticleRepository
         if (!empty($filters['search'])) {
             $search = $filters['search'];
             $query->where(function ($q) use ($search) {
-                $q->whereFullText(['title', 'description', 'content'], $search)
-                    ->orWhere('title', 'like', "%{$search}%");
+                // Use fulltext search if not SQLite (testing)
+                if (DB::connection()->getDriverName() !== 'sqlite') {
+                    $q->whereFullText(['title', 'description', 'content'], $search);
+                } else {
+                    // Fallback to LIKE for SQLite
+                    $q->where('title', 'like', "%{$search}%")
+                        ->orWhere('description', 'like', "%{$search}%")
+                        ->orWhere('content', 'like', "%{$search}%");
+                }
             });
         }
 
